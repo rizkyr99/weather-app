@@ -1,112 +1,189 @@
-import Image from "next/image";
+'use client';
+
+import moment from 'moment';
+import { Loader2 } from 'lucide-react';
+import Image from 'next/image';
+import { useEffect } from 'react';
+import Search from '@/components/Search';
+import { useWeather } from '@/hooks/useWeather';
+import Illustration from '@/components/Illustration';
+import VariableCard from '@/components/VariableCard';
+import { formatToCelcius } from '@/utils/formatToCelcius';
 
 export default function Home() {
+  const { data, fetchWeather } = useWeather();
+
+  useEffect(() => {
+    fetchWeather(35.6895, 139.6917, 'Tokyo');
+  }, [fetchWeather]);
+
+  if (!data)
+    return (
+      <div className='h-screen w-screen bg-slate-100 flex items-center justify-center'>
+        <Loader2 className='size-6 text-slate-500 animate-spin' />
+      </div>
+    );
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className='w-screen lg:h-screen overflow-hidden p-8 bg-slate-100 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+      <div className='flex flex-col gap-6 h-full'>
+        <div className='card flex flex-col flex-1 gap-8'>
+          <Search />
+          <div className='flex-1 flex flex-col'>
+            <h1 className='text-center text-3xl font-bold'>{data?.name}</h1>
+            <p className='text-center text-slate-500 mb-2'>
+              {data && moment(data.dt * 1000).format('dddd, D MMMM YYYY')}
+            </p>
+            <p className='text-slate-500 font-semibold text-2xl text-center'>
+              {data && moment(data.dt * 1000).format('HH:mm')}
+            </p>
+            <div className='flex-1 flex justify-center items-center'>
+              <Illustration />
+            </div>
+            <div>
+              <p className='text-5xl font-bold text-center'>
+                {formatToCelcius(data.main.temp) + '°C'}
+              </p>
+              <p className='text-lg text-center'>
+                {data?.weather[0].description
+                  .split(' ')
+                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                  .join(' ')}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className='hidden md:block lg:hidden'>
+          <p className='next-title'>Next 2 hours</p>
+          <div className='grid grid-cols-2 gap-6'>
+            <div className='next-card'>
+              <p className='text-slate-500 text-sm text-center'>17:00</p>
+              <Image
+                src='/assets/05.partial-cloudy-light.svg'
+                width={80}
+                height={80}
+                alt='cloudy rainy'
+                className='w-full max-w-[80px] object-contain'
+              />
+              <p className='text-xl text-center font-bold'>28°C</p>
+            </div>
+            <div className='next-card'>
+              <p className='text-slate-500 text-sm text-center'>17:00</p>
+              <Image
+                src='/assets/05.partial-cloudy-light.svg'
+                width={80}
+                height={80}
+                alt='cloudy rainy'
+                className='w-full max-w-[80px] object-contain'
+              />
+              <p className='text-xl text-center font-bold'>28°C</p>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className='lg:col-span-2 flex flex-col gap-6'>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6 flex-1'>
+          <div className='flex flex-col gap-6 h-full'>
+            <div className='grid grid-cols-2 gap-6 flex-1'>
+              <VariableCard title='Humidity' value={`${data.main.humidity}%`} />
+              <VariableCard
+                title='Pressure'
+                value={`${data.main.pressure} hPa`}
+              />
+            </div>
+            <div className='grid grid-cols-2 gap-6 flex-1'>
+              <VariableCard
+                title='Wind Speed'
+                value={`${Math.round(data.wind.speed)} km/h`}
+              />
+              <VariableCard
+                title='Visibility'
+                value={`${data.visibility / 1000} km`}
+              />
+            </div>
+            <div className='grid grid-cols-2 gap-6 flex-1'>
+              <VariableCard
+                title='Min Temp'
+                value={`${formatToCelcius(data.main.temp_min)} °C`}
+              />
+              <VariableCard
+                title='Max Temp'
+                value={`${formatToCelcius(data.main.temp_max)} °C`}
+              />
+            </div>
+          </div>
+          <div className='card'>
+            <p className='card-title mb-8 text-left'>Overview</p>
+            <p className='text-sm text-justify leading-relaxed line-clamp-[12]'>
+              The current weather is overcast with a temperature of 16°C and a
+              feels-like temperature of 16°C. The wind speed is 4 meter/sec with
+              gusts up to 6 meter/sec coming from the west-southwest direction.
+              The air pressure is at 1007 hPa with a humidity level of 79%. The
+              dew point is at 12°C and the visibility is 10000 meters. The UV
+              index is at 4, indicating moderate risk from the sun&apos;s UV
+              rays. The sky is covered with overcast clouds, and there is no
+              precipitation expected at the moment. Overall, it is a moderately
+              cool and cloudy day with light to moderate winds from the
+              west-southwest.
+            </p>
+          </div>
+        </div>
+        <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
+          <div className='md:hidden lg:block'>
+            <p className='next-title'>Next 2 hours</p>
+            <div className='grid grid-cols-2 gap-6'>
+              <div className='next-card'>
+                <p className='text-slate-500 text-sm text-center'>17:00</p>
+                <Image
+                  src='/assets/05.partial-cloudy-light.svg'
+                  width={80}
+                  height={80}
+                  alt='cloudy rainy'
+                  className='w-full max-w-[80px] object-contain'
+                />
+                <p className='text-xl text-center font-bold'>28°C</p>
+              </div>
+              <div className='next-card'>
+                <p className='text-slate-500 text-sm text-center'>17:00</p>
+                <Image
+                  src='/assets/05.partial-cloudy-light.svg'
+                  width={80}
+                  height={80}
+                  alt='cloudy rainy'
+                  className='w-full max-w-[80px] object-contain'
+                />
+                <p className='text-xl text-center font-bold'>28°C</p>
+              </div>
+            </div>
+          </div>
+          <div className=''>
+            <p className='next-title'>Next 2 hours</p>
+            <div className='grid grid-cols-2 gap-6'>
+              <div className='next-card'>
+                <p className='text-slate-500 text-sm text-center'>17:00</p>
+                <Image
+                  src='/assets/05.partial-cloudy-light.svg'
+                  width={80}
+                  height={80}
+                  alt='cloudy rainy'
+                  className='w-full max-w-[80px] object-contain'
+                />
+                <p className='text-xl text-center font-bold'>28°C</p>
+              </div>
+              <div className='next-card'>
+                <p className='text-slate-500 text-sm text-center'>17:00</p>
+                <Image
+                  src='/assets/05.partial-cloudy-light.svg'
+                  width={80}
+                  height={80}
+                  alt='cloudy rainy'
+                  className='w-full max-w-[80px] object-contain'
+                />
+                <p className='text-xl text-center font-bold'>28°C</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );

@@ -2,32 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+@layer components {
+  .card {
+    @apply bg-white/25 backdrop-blur-2xl rounded-[32px] shadow-[4px_4px_48px_0_rgba(0,0,0,0.05)] p-8 lg:p-12;
   }
-}
+  .card-sm {
+    @apply p-4 lg:p-8;
+  }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+  .variable-card {
+    @apply flex flex-col gap-4 justify-between items-center;
+  }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .next-card {
+    @apply card card-sm flex flex-col items-center;
+  }
+
+  .card-title {
+    @apply text-sm text-slate-500 text-center;
+  }
+
+  .variable-card-data {
+    @apply text-2xl font-bold text-center whitespace-nowrap;
+  }
+
+  .next-title {
+    @apply text-xl font-semibold text-slate-500 mb-2;
   }
 }
