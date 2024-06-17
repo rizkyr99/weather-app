@@ -34,7 +34,7 @@ export const useWeather = create<WeatherState>((set) => ({
     set({ loading: true, error: null });
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=7b58bd9878dc6f47588c3ac32e721677`
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY}`
       );
       const result = (await response.json()) as WeatherData;
 

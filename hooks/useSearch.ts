@@ -27,7 +27,7 @@ export const useSearch = (initialValue = '', delay = 500) => {
         setError(null);
         try {
           const response = await fetch(
-            `https://api.openweathermap.org/geo/1.0/direct?q=${debouncedValue}&limit=5&appid=7b58bd9878dc6f47588c3ac32e721677`
+            `https://api.openweathermap.org/geo/1.0/direct?q=${debouncedValue}&limit=5&appid=${process.env.NEXT_PUBLIC_OPENWEATHERMAP_API_KEY}`
           );
           if (!response.ok) {
             throw new Error('Network response was not ok');
